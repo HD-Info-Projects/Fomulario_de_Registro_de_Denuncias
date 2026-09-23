@@ -53,6 +53,26 @@ body {
     margin-right: 8px;
 }
 
+.flash-messages {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.flash-message {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #111114;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.flash-message.error {
+    border-color: #8a2f2f;
+    background: #2a1717;
+}
+
 /* ===== Inputs com ícones ===== */
 .input-group {
     display: flex;

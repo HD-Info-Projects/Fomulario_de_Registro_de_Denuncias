@@ -15,22 +15,28 @@ class Denuncia(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     categoria = db.Column(db.String(255), nullable=False)
     frequencia = db.Column(db.String(255), nullable=False)
-    data = db.Column(db.Date, nullable=False)
+    data = db.Column(db.Date, nullable=False, index=True)
     testemunha = db.Column(db.String(10), nullable=False)
     nomes_testemunhas = db.Column(db.Text(), nullable=True)
     descricao_do_fato = db.Column(db.Text, nullable=False)
     
-    vitima_id = db.Column(db.Integer, db.ForeignKey("vitimas.id"), nullable=False)
-    ofesor_id = db.Column(db.Integer, db.ForeignKey("ofesors.id"), nullable=False)
+    vitima_id = db.Column(db.Integer, db.ForeignKey("vitimas.id"), nullable=False, index=True)
+    ofesor_id = db.Column(db.Integer, db.ForeignKey("ofesors.id"), nullable=False, index=True)
     
     vitima = db.relationship("Vitima", back_populates="denuncias")
     ofesor = db.relationship("Ofesor", back_populates="denuncias")
     
-    data_public = db.Column(db.Date, nullable=True)
+    data_public = db.Column(db.Date, nullable=True, index=True)
     # data_inicio = db.Column(db.Date, nullable=True)
     # data_fim = db.Column(db.Date, nullable=True)
     
-    status = db.Column(db.String(25), default=StatusEnum.PENDENTE.value, nullable=True)
+    status = db.Column(
+        db.String(25),
+        default=StatusEnum.PENDENTE.value,
+        server_default=StatusEnum.PENDENTE.value,
+        nullable=False,
+        index=True
+    )
     severidade = db.Column(db.String(25), nullable=True)
     evidencias = db.Column(db.String(50), nullable=True)
     responsavel = db.Column(db.String(150), nullable=True)

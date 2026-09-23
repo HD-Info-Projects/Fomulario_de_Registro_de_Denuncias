@@ -7,7 +7,7 @@ class DenunciaAnexos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     
     # Relação com tabela de denuncias:
-    id_denuncia = db.Column(db.Integer, db.ForeignKey('denuncias.id'), nullable=True)
+    id_denuncia = db.Column(db.Integer, db.ForeignKey('denuncias.id'), nullable=False, index=True)
     denuncia = db.relationship("Denuncia", back_populates='anexos')
     
     file_path = db.Column(db.String(500), nullable=False)

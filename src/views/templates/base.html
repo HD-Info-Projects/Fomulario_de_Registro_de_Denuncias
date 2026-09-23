@@ -48,19 +48,32 @@
                 Painel
             </a>
 
-            <a href="/admin/logout">
+            <form action="{{ url_for('admin.logout') }}" method="POST" class="nav-logout-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="nav-logout-button">
                 <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
                     <!-- Logout -->
                     <path d="M3 3h7v2H5v10h5v2H3V3zm9.59 3.59L11 8.17 13.83 11H7v2h6.83L11 15.83l1.59 1.58L18 12l-5.41-5.41z"/>
                 </svg>
                 Sair
-            </a>
+                </button>
+            </form>
 
         </nav>
     </header>
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         {% block content %}{% endblock %}
     </main>
 
@@ -70,9 +83,6 @@
         <p>&copy; 2025 - Aplicação - Rafael Timóteo Costa Oliveira</p>
         {% endblock %}
     </footer>
-
-    <!-- Scripts globais -->
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
     {% block scripts %}{% endblock %}
 </body>

@@ -52,61 +52,54 @@ Dashboard
     </div>
 
     <div class="right">
-        <form class="center" action="{{ url_for('admin.filter_dashboard') }}" method="POST">
-            
-            <!-- Proteção CSRF_TOKEN -->
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"></input>
+        <form class="center" action="{{ url_for('admin.dashboard') }}" method="GET">
 
             <div class="blocos3 filtro-div">
                 <h3>Filtros</h3>
 
                 <div class="filtro-item">
                     <label for="periodo">Período</label>
-                    <input type="date" name="dataInicio" id="dataInicio">
-                    <input type="date" name="dataFim" id="dataFim">
+                    <input type="date" name="data_inicio" id="dataInicio" value="{{ filtros.data_inicio }}">
+                    <input type="date" name="data_fim" id="dataFim" value="{{ filtros.data_fim }}">
                 </div>
 
                 <div class="filtro-item">
                     <label for="status">Status</label>
                     <select name="status" id="status">
-                        <option value="all">Todos</option>
-                        <option value="recebida">Recebida</option>
-                        <option value="analise">Em análise</option>
-                        <option value="investigacao">Investigação</option>
-                        <option value="encerrada">Encerrada</option>
+                        {% for value, label in status_options %}
+                            <option value="{{ value }}" {% if filtros.status == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
                 <div class="filtro-item">
                     <label for="severidade">Severidade</label>
                     <select name="severidade" id="severidade">
-                        <option value="all">Todas</option>
-                        <option value="baixa">Baixa</option>
-                        <option value="media">Média</option>
-                        <option value="alta">Alta</option>
-                        <option value="critica">Crítica</option>
+                        {% for value, label in severidade_options %}
+                            <option value="{{ value }}" {% if filtros.severidade == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
                 <div class="filtro-item">
                     <label for="evidencias">Evidências</label>
                     <select name="evidencias" id="evidencias">
-                        <option value="all">Todos</option>
-                        <option value="com">Com Evidências</option>
-                        <option value="sem">Sem Evidências</option>
+                        {% for value, label in evidencias_options %}
+                            <option value="{{ value }}" {% if filtros.evidencias == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
                 <button type="submit" id="btn-filtrar" class="btn-filtrar">Aplicar filtros</button>
+                <a href="{{ url_for('admin.dashboard') }}" class="btn-exportar">Limpar filtros</a>
             </div>
 
 
             <div class="blocos3 exporta-div">
                 <h3>Exportar Relatório</h3>
-                <!-- Opção 1: links diretos -->
-                <a href="/admin/exportar/csv" class="btn-exportar">📊 Exportar CSV</a>
-                <a href="/admin/exportar/excel" class="btn-exportar">📁 Exportar Excel</a>
-                <a href="/admin/exportar/pdf" class="btn-exportar">📄 Exportar PDF</a>
+                <a href="{{ export_csv_url }}" class="btn-exportar">Exportar CSV</a>
+                <a href="{{ export_excel_url }}" class="btn-exportar">Exportar Excel</a>
+                <a href="{{ export_pdf_url }}" class="btn-exportar">Exportar PDF</a>
             </div>
 
         </form>

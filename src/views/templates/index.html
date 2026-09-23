@@ -18,12 +18,16 @@
     </h1>
 
     <p>
-        Bem-vindo ao painel de controle.  
-        Esta é uma área restrita — apenas usuários autorizados podem acessar.
+        Bem-vindo ao painel de controle.
+        Esta é uma área restrita para usuários autenticados.
     </p>
 
-    <a href="{{ url_for('admin.login_admin') }}" class="btn-primary">
-        Acessar Login Administrativo
+    <a href="{{ url_for('admin.dashboard') }}" class="btn-primary">
+        Acessar Dashboard
+    </a>
+
+    <a href="{{ url_for('admin.painel') }}" class="btn-primary">
+        Acessar Painel de Denúncias
     </a>
 </section>
 {% endblock %}

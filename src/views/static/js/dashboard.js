@@ -1,6 +1,7 @@
 async function carregarDashboard() {
   try {
-    const response = await fetch(`/admin/meses-denuncias`);
+    const params = window.location.search || "";
+    const response = await fetch(`/admin/meses-denuncias${params}`);
     const dados = await response.json()    
 
     const dadosMes = [
@@ -10,7 +11,9 @@ async function carregarDashboard() {
     ];
 
     // GRÁFICO MENSAL
-    new Chart(document.getElementById("graficoMes"), {
+    const graficoMes = document.getElementById("graficoMes");
+    if (graficoMes) {
+      new Chart(graficoMes, {
         type: "bar",
         data: {
         labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
@@ -25,9 +28,10 @@ async function carregarDashboard() {
         responsive: true,
         scales: { y: { beginAtZero: true } }
         }
-    });
+      });
+    }
 
-    const response1 = await fetch(`/admin/filter/quantidade_status`);
+    const response1 = await fetch(`/admin/filter/quantidade_status${params}`);
     const dados1 = await response1.json()
 
     const dadosStatus = [
@@ -39,7 +43,9 @@ async function carregarDashboard() {
     // STATUS DAS DENÚNCIAS
     // ============================
 
-    new Chart(document.getElementById("graficoStatus"), {
+    const graficoStatus = document.getElementById("graficoStatus");
+    if (graficoStatus) {
+      new Chart(graficoStatus, {
       type: 'bar',
       data: {
         labels: ['Pendente', 'Em análise', 'Suspenso', 'Encerradas'],
@@ -61,9 +67,31 @@ async function carregarDashboard() {
           x: { beginAtZero: true }
         }
       }
-    });
+      });
+    }
 
+    const response2 = await fetch(`/admin/filter/severidade${params}`);
+    const dados2 = await response2.json();
+    const graficoDoughnut = document.getElementById("graficoDoughnut");
 
+    if (graficoDoughnut) {
+      new Chart(graficoDoughnut, {
+        type: 'doughnut',
+        data: {
+          labels: dados2.labels,
+          datasets: [{
+            data: dados2.values,
+            backgroundColor: [
+              'rgb(3, 188, 169)',
+              'rgb(255, 193, 7)',
+              'rgb(255, 152, 0)',
+              'rgb(244, 67, 54)',
+              'rgb(148, 163, 184)'
+            ]
+          }]
+        }
+      });
+    }
 
   } catch (error) {
     console.error("Erro ao carregar dashboard:", error);
@@ -72,44 +100,3 @@ async function carregarDashboard() {
 }
 
 carregarDashboard();
-
-// ============================
-// DENÚNCIAS POR GÊNERO
-// ============================
-
-new Chart(document.getElementById("graficoDoughnut"), {
-  type: 'doughnut',
-  data: {
-    labels: ['Baixo', 'Médio', 'Alta', 'Crítica'],
-    datasets: [{
-      data: [150,80, 35, 13],
-      backgroundColor: [
-        'rgb(3, 188, 169)',
-        'rgb(255, 193, 7)',
-        'rgb(255, 152, 0)',
-        'rgb(244, 67, 54)'
-      ]
-    }]
-  }
-});
-
-// // ============================
-// // DENÚNCIAS POR TIPO
-// // ============================
-
-// new Chart(document.getElementById("graficoPizzaTipo"), {
-//   type: 'pie',
-//   data: {
-//     labels: ['Assédio', 'Fraude', 'Discriminação', 'Outros'],
-//     datasets: [{
-//       data: [45, 25, 20, 10],
-//       backgroundColor: [
-//         'rgb(255, 99, 132)',
-//         'rgb(54, 162, 235)',
-//         'rgb(153, 102, 255)',
-//         'rgb(201, 203, 207)'
-//       ]
-//     }]
-//   }
-// });
-

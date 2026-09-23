@@ -11,12 +11,12 @@ class Usuario(db.Model, UserMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(150), nullable=False)
-    email = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False, unique=True, index=True)
     senha = db.Column(db.String(255), nullable=False)
     
     def __init__(self, nome, email, senha):
         self.nome = nome
-        self.email = email
+        self.email = email.strip().lower()
         if self.is_password_hash(senha):
             self.senha = senha
         else:

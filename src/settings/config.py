@@ -16,6 +16,33 @@ def _parse_extensions(value):
         if extension.strip()
     }
 
+def _env_bool(name, default=False):
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+def _env_int(name, default):
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    try:
+        return int(value)
+    except ValueError as exc:
+        raise RuntimeError(f"{name} must be an integer.") from exc
+
+def _required_env(name):
+    value = os.getenv(name)
+
+    if value is None or not value.strip():
+        raise RuntimeError(f"{name} must be set.")
+
+    return value.strip()
+
 def _resolve_upload_folder():
     upload_folder = os.getenv("UPLOAD_FOLDER")
 
@@ -35,11 +62,21 @@ def _resolve_upload_folder():
     return resolved
 
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
+    SECRET_KEY = _required_env("SECRET_KEY")
+    SQLALCHEMY_DATABASE_URI = _required_env("DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": _env_int("SQLALCHEMY_POOL_RECYCLE", 280),
+    }
     UPLOAD_FOLDER = _resolve_upload_folder()
     ALLOWED_EXTENSIONS = _parse_extensions(
         os.getenv("ALLOWED_EXTENSIONS", "png,jpg,jpeg,webp,mp4,mov,avi,mkv")
     )
-    MAX_CONTENT_LENGTH = 100 * 1024 * 1024
+    MAX_CONTENT_LENGTH = _env_int("MAX_CONTENT_LENGTH", 100 * 1024 * 1024)
+    MAX_UPLOAD_FILE_SIZE = _env_int("MAX_UPLOAD_FILE_SIZE", 25 * 1024 * 1024)
+    MAX_FILES_PER_DENUNCIA = _env_int("MAX_FILES_PER_DENUNCIA", 5)
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SECURE = _env_bool("SESSION_COOKIE_SECURE", False)
+    RATELIMIT_STORAGE_URI = os.getenv("RATELIMIT_STORAGE_URI", "memory://")

@@ -39,6 +39,31 @@
     color: var(--primary);
 }
 
+.flash-messages {
+    max-width: 700px;
+    margin: 0 auto 18px;
+    display: grid;
+    gap: 10px;
+}
+
+.flash-message {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #2b2c31;
+    background: #1b1c1f;
+    color: #e9e9ec;
+}
+
+.flash-message.error {
+    border-color: #8a2f2f;
+    background: #2a1717;
+}
+
+.flash-message.success {
+    border-color: #2f7d4f;
+    background: #14261d;
+}
+
 /* ===== FOOTER ===== */
 .footer {
     text-align: center;

@@ -30,27 +30,27 @@
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" name="nome" placeholder="Nome completo (opcional)" required >
+                        <input type="text" name="nome" placeholder="Nome completo" maxlength="150" required>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" name="idade" placeholder="Idade (opcional)" required>
+                        <input type="number" name="idade" placeholder="Idade" min="0" max="130" required>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-phone"></i>
-                        <input type="text" name="telefone" placeholder="Telefone / WhatsApp (opcional)" required>
+                        <input type="text" name="telefone" placeholder="Telefone / WhatsApp" maxlength="20" required>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" name="email" placeholder="E-mail (opcional)">
+                        <input type="email" name="email" placeholder="E-mail (opcional)" maxlength="255">
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" name="setor" placeholder="Setor/Cargo (opcional)" required>
+                        <input type="text" name="setor" placeholder="Setor/Cargo" maxlength="255" required>
                     </div>
 
                 </div>
@@ -62,18 +62,18 @@
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" name="nomeOfensor" placeholder="Nome do Ofensor..." required>
+                            <input type="text" name="nomeOfensor" placeholder="Nome do Ofensor..." maxlength="150" required>
                     </div>
 
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" name="setorOfensor" placeholder="Setor/Cargo (opcional)" required>
+                        <input type="text" name="setorOfensor" placeholder="Setor/Cargo" maxlength="100" required>
                     </div>
 
                     <div class="input-group" style="align-items: flex-start;">
                         <i class="fa-solid fa-align-left" style="margin-top: 5px;"></i>
-                        <textarea name="descricaoOfensor" rows="4" placeholder="Descrição do Ofensor..." required></textarea>
+                        <textarea name="descricaoOfensor" rows="4" maxlength="5000" placeholder="Descrição do Ofensor..." required></textarea>
                     </div>
 
                 </div>
@@ -99,7 +99,7 @@
 
                     <div class="input-group">
                         <i class="fa-solid fa-location-dot"></i>
-                        <input type="text" name="frequencia" placeholder="Frequência..." required>
+                        <input type="text" name="frequencia" placeholder="Frequência..." maxlength="255" required>
                     </div>
 
                     <div class="input-group">
@@ -109,7 +109,7 @@
 
                     <div class="input-group" style="align-items: flex-start;">
                         <i class="fa-solid fa-align-left" style="margin-top: 5px;"></i>
-                        <textarea name="descricaoFatos" rows="4" placeholder="Descreva detalhadamente os fatos..." required></textarea>
+                        <textarea name="descricaoFatos" rows="4" maxlength="10000" placeholder="Descreva detalhadamente os fatos..." required></textarea>
                     </div>
                 </div>
 
@@ -119,7 +119,7 @@
 
                     <div class="input-group">
                         <i class="fa-solid fa-users"></i>
-                        <select name="testemunhas">
+                        <select name="testemunhas" required>
                             <option value="">Existem testemunhas?</option>
                             <option value="Sim">Sim</option>
                             <option value="Não">Não</option>
@@ -128,7 +128,7 @@
 
                     <div class="input-group">
                         <i class="fa-solid fa-id-card"></i>
-                        <input type="text" name="nome_testemunhas" placeholder="Nome das testemunhas">
+                        <input type="text" name="nome_testemunhas" maxlength="5000" placeholder="Nome das testemunhas">
                     </div>
                 </div>
 

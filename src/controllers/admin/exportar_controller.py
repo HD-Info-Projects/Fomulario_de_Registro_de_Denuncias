@@ -1,36 +1,19 @@
-from flask import Blueprint, Response
+from flask import Blueprint, redirect, request, url_for
 from flask_login import login_required
-from src.models.Denuncia_model import Denuncia
-
-import csv, io
 
 exportar_bp = Blueprint("export", __name__, url_prefix="/export")
 
 @exportar_bp.route("/exportar/csv")
 @login_required
 def exportar_csv():
-    denuncias = Denuncia.query.order_by(Denuncia.data.desc()).all()
-    
-    output = io.StringIO()
-    writer = csv.writer(output)
-    
-    # Cabeçalho
-    writer.writerow(["ID", "Categoria", "Data", "Status", "Severidade",
-                     "Vítima", "Ofensor", "Descrição"])
-    
-    # Dados
-    for d in denuncias:
-        writer.writerow([
-            d.id, d.categoria, d.data, d.status, d.severidade,
-            d.vitima.nome, d.ofesor.nome, d.descricao_do_fato
-        ])
-    
-    return Response(
-        output.getvalue(),
-        mimetype="text/csv",
-        headers={"Content-Disposition": "attachment;filename=denuncias.csv"}
-    )
+    return redirect(url_for("admin.exportar_csv", **request.args.to_dict()))
     
 @exportar_bp.route("/exportar/excel", methods=["GET"])
+@login_required
 def exportar_excel():
-    ...
+    return redirect(url_for("admin.exportar_excel", **request.args.to_dict()))
+
+@exportar_bp.route("/exportar/pdf", methods=["GET"])
+@login_required
+def exportar_pdf():
+    return redirect(url_for("admin.exportar_pdf", **request.args.to_dict()))
