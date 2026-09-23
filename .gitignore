@@ -1,3 +1,5 @@
+token.txt
+
 # Uploaded evidence files contain sensitive data and must stay out of Git.
 src/views/static/uploads/denuncias/*
 static/uploads/denuncias/*
