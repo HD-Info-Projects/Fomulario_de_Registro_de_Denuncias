@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 
     <title>{% block title %}Sistema de Denúncias{% endblock %}</title>
 
@@ -12,7 +13,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="icon" href="{{ url_for('static', filename='img/icon-page.png') }}" type="image/png">
 
-    <!-- CSS Global Dark -->
+    <!-- CSS Global e temas -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/baseUser.css') }}">
 
     {% block styles %}{% endblock %}
@@ -27,6 +29,8 @@
                 <i class="fa-solid fa-shield-halved"></i>
                 <span class="nav-title">Sistema de Denúncias</span>
             </div>
+
+            {% include "partials/theme_toggle.html" %}
 
         </nav>
     </header>

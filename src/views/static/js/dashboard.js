@@ -1,3 +1,49 @@
+const graficosDashboard = [];
+const temaDashboard = {
+  id: "temaDashboard",
+  beforeUpdate(grafico) {
+    const estilos = getComputedStyle(document.documentElement);
+    const texto = estilos.getPropertyValue("--text-secondary").trim();
+    const borda = estilos.getPropertyValue("--border").trim();
+    const fundo = estilos.getPropertyValue("--surface-muted").trim();
+
+    grafico.options.color = texto;
+    grafico.options.plugins.legend.labels.color = texto;
+    Object.assign(grafico.options.plugins.tooltip, {
+      backgroundColor: estilos.getPropertyValue("--surface").trim(),
+      titleColor: estilos.getPropertyValue("--text-primary").trim(),
+      bodyColor: estilos.getPropertyValue("--text-primary").trim(),
+      borderColor: borda,
+      borderWidth: 1
+    });
+
+    Object.values(grafico.options.scales || {}).forEach((escala) => {
+      escala.ticks.color = texto;
+      escala.grid.color = borda;
+      escala.border.color = borda;
+    });
+
+    if (grafico.config.type === "doughnut") {
+      grafico.data.datasets.forEach((dataset) => {
+        dataset.borderColor = fundo;
+      });
+    }
+
+    if (grafico.canvas.id === "graficoMes") {
+      const cor = estilos.getPropertyValue("--primary").trim();
+      grafico.data.datasets[0].backgroundColor = cor;
+      grafico.data.datasets[0].borderColor = cor;
+    }
+  }
+};
+
+window.addEventListener("themechange", () => {
+  graficosDashboard.forEach((grafico) => {
+    grafico.stop();
+    grafico.update("none");
+  });
+});
+
 async function carregarDashboard() {
   try {
     const params = window.location.search || "";
@@ -13,8 +59,9 @@ async function carregarDashboard() {
     // GRÁFICO MENSAL
     const graficoMes = document.getElementById("graficoMes");
     if (graficoMes) {
-      new Chart(graficoMes, {
+      graficosDashboard.push(new Chart(graficoMes, {
         type: "bar",
+        plugins: [temaDashboard],
         data: {
         labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
                 "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
@@ -28,7 +75,7 @@ async function carregarDashboard() {
         responsive: true,
         scales: { y: { beginAtZero: true } }
         }
-      });
+      }));
     }
 
     const response1 = await fetch(`/admin/filter/quantidade_status${params}`);
@@ -45,8 +92,9 @@ async function carregarDashboard() {
 
     const graficoStatus = document.getElementById("graficoStatus");
     if (graficoStatus) {
-      new Chart(graficoStatus, {
+      graficosDashboard.push(new Chart(graficoStatus, {
       type: 'bar',
+      plugins: [temaDashboard],
       data: {
         labels: ['Pendente', 'Em análise', 'Suspenso', 'Encerradas'],
         datasets: [{
@@ -67,7 +115,7 @@ async function carregarDashboard() {
           x: { beginAtZero: true }
         }
       }
-      });
+      }));
     }
 
     const response2 = await fetch(`/admin/filter/severidade${params}`);
@@ -75,8 +123,9 @@ async function carregarDashboard() {
     const graficoDoughnut = document.getElementById("graficoDoughnut");
 
     if (graficoDoughnut) {
-      new Chart(graficoDoughnut, {
+      graficosDashboard.push(new Chart(graficoDoughnut, {
         type: 'doughnut',
+        plugins: [temaDashboard],
         data: {
           labels: dados2.labels,
           datasets: [{
@@ -90,7 +139,7 @@ async function carregarDashboard() {
             ]
           }]
         }
-      });
+      }));
     }
 
   } catch (error) {

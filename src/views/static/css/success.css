@@ -1,14 +1,3 @@
-/* ===== Dark theme elegante ===== */
-:root {
-    --bg: #0f0f11;
-    --surface: #1b1c1f;
-    --border: #2b2c31;
-    --text: #e9e9ec;
-    --muted: #b3b3bb;
-    --primary: #4f7dff;
-    --primary-hover: #3c64db;
-}
-
 /* ===== COR DE FUNDO GLOBAL ===== */
 body {
     background: var(--bg);
@@ -25,7 +14,8 @@ body {
 }
 
 /* Container central */
-.success-box {
+.success-box,
+.login-box {
     max-width: 700px;
     margin: 60px auto;
     background: var(--surface);
@@ -33,7 +23,7 @@ body {
     border-radius: 18px;
     border: 1px solid var(--border);
     text-align: center;
-    box-shadow: 0 0 30px rgba(0,0,0,0.35);
+    box-shadow: var(--shadow);
     animation: fadeIn .5s ease;
 }
 
@@ -76,7 +66,7 @@ body {
 
 /* Botão primário */
 .success-btn-primary {
-    background: var(--primary);
+    background: var(--button-primary-bg);
     color: #fff;
 }
 .success-btn-primary:hover {
@@ -91,7 +81,7 @@ body {
     color: var(--text);
 }
 .success-btn-secondary:hover {
-    background: #2a2b2f;
+    background: var(--surface-muted);
     transform: translateY(-2px);
 }
 
@@ -104,7 +94,7 @@ body {
 /* Botão extra (versão antiga corrigida) */
 .success-btn {
     width: 100%;
-    background: var(--primary);
+    background: var(--button-primary-bg);
     border: none;
     padding: 12px;
     font-size: 15px;
@@ -121,4 +111,12 @@ body {
 .success-btn:hover {
     background: var(--primary-hover);
     transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .success-box,
+    .login-box {
+        margin: 20px;
+        padding: 28px 20px;
+    }
 }

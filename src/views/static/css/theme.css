@@ -1,0 +1,163 @@
+/* Tema claro por padrão; a preferência salva é aplicada antes dos estilos. */
+:root {
+    color-scheme: light;
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-muted: #f0f3f8;
+    --input-bg: #f8fafc;
+    --border: #d5dce7;
+    --border-strong: #9ca8ba;
+    --text: #1f2937;
+    --muted: #5b6475;
+    --primary: #315fdf;
+    --primary-hover: #2448b7;
+    --button-primary-bg: #315fdf;
+    --accent: #5145cd;
+    --primary-text: #244bb8;
+    --primary-soft: rgba(49, 95, 223, 0.08);
+    --primary-soft-hover: rgba(49, 95, 223, 0.15);
+    --primary-border: rgba(49, 95, 223, 0.35);
+    --focus-ring: rgba(49, 95, 223, 0.2);
+    --success: #166534;
+    --success-bg: #f0fdf4;
+    --success-border: #86bda0;
+    --success-button: #15803d;
+    --success-button-hover: #166534;
+    --warning: #854d0e;
+    --warning-bg: #fefce8;
+    --warning-border: #d5ae42;
+    --info: #075985;
+    --info-bg: #f0f9ff;
+    --info-border: #7ac4e9;
+    --suspended: #9a3412;
+    --suspended-bg: #fff7ed;
+    --suspended-border: #e8aa80;
+    --danger: #b91c1c;
+    --danger-bg: #fef2f2;
+    --danger-border: #e7a1a1;
+    --shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+    --shadow-inset: inset 0 0 6px rgba(15, 23, 42, 0.04);
+    --header-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+
+    /* Nomes usados pelo layout administrativo. */
+    --bg-primary: var(--bg);
+    --bg-secondary: var(--surface);
+    --bg-tertiary: var(--surface-muted);
+    --text-primary: var(--text);
+    --text-secondary: var(--muted);
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f0f11;
+    --surface: #1b1c1f;
+    --surface-muted: #16171b;
+    --input-bg: #111114;
+    --border: #2b2c31;
+    --border-strong: #4b4c57;
+    --text: #e9e9ec;
+    --muted: #b3b3bb;
+    --primary: #4f7dff;
+    --primary-hover: #3156c4;
+    --button-primary-bg: #3c64db;
+    --accent: #9b93ff;
+    --primary-text: #a3b9ff;
+    --primary-soft: rgba(79, 125, 255, 0.12);
+    --primary-soft-hover: rgba(79, 125, 255, 0.22);
+    --primary-border: rgba(79, 125, 255, 0.35);
+    --focus-ring: rgba(79, 125, 255, 0.25);
+    --success: #4ade80;
+    --success-bg: #14261d;
+    --success-border: #2f7d4f;
+    --warning: #facc15;
+    --warning-bg: rgba(250, 204, 21, 0.12);
+    --warning-border: rgba(250, 204, 21, 0.45);
+    --info: #38bdf8;
+    --info-bg: rgba(56, 189, 248, 0.12);
+    --info-border: rgba(56, 189, 248, 0.35);
+    --suspended: #fb923c;
+    --suspended-bg: rgba(249, 115, 22, 0.12);
+    --suspended-border: rgba(249, 115, 22, 0.35);
+    --danger: #f87171;
+    --danger-bg: #2a1717;
+    --danger-border: #8a2f2f;
+    --shadow: 0 0 25px rgba(0, 0, 0, 0.35);
+    --shadow-inset: inset 0 0 6px rgba(0, 0, 0, 0.35);
+    --header-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--muted);
+    opacity: 1;
+}
+
+button.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    width: auto;
+    min-height: 44px;
+    margin: 0 0 0 auto;
+    padding: 10px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+button.theme-toggle[hidden] {
+    display: none;
+}
+
+button.theme-toggle:hover {
+    background: var(--surface-muted);
+    border-color: var(--primary);
+    transform: none;
+}
+
+button.theme-toggle:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.theme-toggle svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.theme-icon-sun,
+[data-theme="dark"] .theme-icon-moon {
+    display: none;
+}
+
+[data-theme="dark"] .theme-icon-sun {
+    display: block;
+}
+
+.login-theme-bar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    button.theme-toggle {
+        transition: none;
+    }
+}

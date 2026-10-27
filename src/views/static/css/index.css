@@ -16,12 +16,12 @@
     justify-content: center;
     gap: .7rem;
     margin-bottom: 1rem;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .admin-home p {
     font-size: 1.05rem;
-    color: #b8bbc7;
+    color: var(--text-secondary);
     margin-bottom: 2.5rem;
 }
 

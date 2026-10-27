@@ -1,6 +1,15 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 /* ===== NAVBAR ===== */
 .header {
-    background: #1b1c1f;
+    background: var(--surface);
     border-bottom: 1px solid var(--border);
     padding: 12px 0;
     margin-bottom: 20px;
@@ -12,8 +21,10 @@
     margin: auto;
     padding: 0 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .nav-left {
@@ -49,19 +60,21 @@
 .flash-message {
     padding: 12px 14px;
     border-radius: 10px;
-    border: 1px solid #2b2c31;
-    background: #1b1c1f;
-    color: #e9e9ec;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
 }
 
 .flash-message.error {
-    border-color: #8a2f2f;
-    background: #2a1717;
+    border-color: var(--danger-border);
+    background: var(--danger-bg);
+    color: var(--danger);
 }
 
 .flash-message.success {
-    border-color: #2f7d4f;
-    background: #14261d;
+    border-color: var(--success-border);
+    background: var(--success-bg);
+    color: var(--success);
 }
 
 /* ===== FOOTER ===== */

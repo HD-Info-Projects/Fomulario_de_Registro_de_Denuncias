@@ -2,6 +2,12 @@
 
 Aplicação Flask para registro, análise e exportação de denúncias.
 
+## Aparência
+
+O frontend usa o tema claro no primeiro acesso. O botão no cabeçalho alterna entre os temas claro e escuro, incluindo o login e a área administrativa. A escolha é salva no navegador e mantida ao navegar ou recarregar a página.
+
+Testes do tema (Node.js, sem dependências adicionais): `node --test tests/theme.test.cjs`.
+
 ## Execução local
 
 1. Crie um `.env` a partir de `.env.example`.

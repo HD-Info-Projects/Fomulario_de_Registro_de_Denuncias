@@ -1,14 +1,3 @@
-/* ===== Dark theme elegante ===== */
-:root {
-    --bg: #0f0f11;
-    --surface: #1b1c1f;
-    --border: #2b2c31;
-    --text: #e9e9ec;
-    --muted: #b3b3bb;
-    --primary: #4f7dff;
-    --primary-hover: #3c64db;
-}
-
 /* ===== GLOBAL ===== */
 body {
     background: var(--bg);
@@ -20,7 +9,7 @@ body {
 
 /* ===== Centralização ===== */
 .login-wrapper {
-    min-height: 93vh;
+    min-height: calc(100vh - 76px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,7 +24,7 @@ body {
     max-width: 420px;
     border-radius: 18px;
     border: 1px solid var(--border);
-    box-shadow: 0 0 30px rgba(0,0,0,0.35);
+    box-shadow: var(--shadow);
     animation: fadeIn .4s ease;
 }
 
@@ -63,21 +52,22 @@ body {
     padding: 12px 14px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background: #111114;
+    background: var(--input-bg);
     color: var(--text);
     font-size: 14px;
 }
 
 .flash-message.error {
-    border-color: #8a2f2f;
-    background: #2a1717;
+    border-color: var(--danger-border);
+    background: var(--danger-bg);
+    color: var(--danger);
 }
 
 /* ===== Inputs com ícones ===== */
 .input-group {
     display: flex;
     align-items: center;
-    background: #111114;
+    background: var(--input-bg);
     border: 1px solid var(--border);
     padding: 13px 15px;
     border-radius: 10px;
@@ -107,9 +97,9 @@ body {
 }
 
 /* ===== Botão ===== */
-button {
+.login-box button {
     width: 100%;
-    background: var(--primary);
+    background: var(--button-primary-bg);
     border: none;
     padding: 13px;
     font-size: 15px;
@@ -124,11 +114,11 @@ button {
     transition: 0.25s;
 }
 
-button i {
+.login-box button i {
     font-size: 15px;
 }
 
-button:hover {
+.login-box button:hover {
     background: var(--primary-hover);
     transform: translateY(-1px);
 }
@@ -171,7 +161,7 @@ button:hover {
         font-size: 14px;
     }
 
-    button {
+    .login-box button {
         padding: 12px;
         font-size: 14px;
         border-radius: 8px;
