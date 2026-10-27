@@ -98,7 +98,7 @@ textarea::placeholder {
     opacity: 1;
 }
 
-button.theme-toggle {
+/* button.theme-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -118,7 +118,7 @@ button.theme-toggle {
     line-height: 1.2;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
-}
+} */
 
 button.theme-toggle[hidden] {
     display: none;

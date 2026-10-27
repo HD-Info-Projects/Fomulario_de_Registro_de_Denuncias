@@ -16,7 +16,7 @@
 
     function updateButtons() {
         const dark = root.dataset.theme === "dark";
-        const label = dark ? "Tema claro" : "Tema escuro";
+        const label = dark ? "" : "";
         const action = dark ? "Ativar tema claro" : "Ativar tema escuro";
 
         document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
