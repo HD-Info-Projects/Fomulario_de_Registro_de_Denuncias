@@ -51,12 +51,16 @@ STATUS_OPTIONS = [
     (StatusEnum.FINALIZADO.value, "Finalizado"),
 ]
 
-SEVERIDADE_OPTIONS = [
-    ("", "Todas"),
+SEVERIDADES = [
     ("baixa", "Baixa"),
     ("media", "Média"),
     ("alta", "Alta"),
     ("critica", "Crítica"),
+]
+
+SEVERIDADE_OPTIONS = [
+    ("", "Todas"),
+    *SEVERIDADES,
     ("nao_definida", "Não definida"),
 ]
 
@@ -211,10 +215,10 @@ def _apply_painel_filters(query, filtros):
         query = query.filter(~Denuncia.anexos.any())
 
     if data_inicio:
-        query = query.filter(Denuncia.data >= data_inicio)
+        query = query.filter(Denuncia.data_public >= data_inicio)
 
     if data_fim:
-        query = query.filter(Denuncia.data <= data_fim)
+        query = query.filter(Denuncia.data_public <= data_fim)
 
     return query
 
@@ -297,7 +301,10 @@ def _clean_limited_text(value, max_length):
     if value is None:
         return None
 
-    text = str(value).strip()
+    if not isinstance(value, str):
+        raise ValueError("O campo deve conter um texto.")
+
+    text = value.strip()
 
     if not text:
         return None
@@ -388,6 +395,7 @@ def painel():
         resumo=_painel_summary(),
         total_filtrado=pagination.total,
         status_options=STATUS_OPTIONS,
+        severidade_options=[("", "Não definida"), *SEVERIDADES],
         sort_options=SORT_OPTIONS,
         prazo_pendente_dias=PRAZO_PENDENTE_DIAS,
     )
@@ -486,17 +494,10 @@ def quantidade_severidade():
     try:
         filtros = _get_dashboard_filters()
         query = _dashboard_filtered_query(filtros, include_severidade=False)
-        severidades = [
-            ("baixa", "Baixa"),
-            ("media", "Média"),
-            ("alta", "Alta"),
-            ("critica", "Crítica"),
-        ]
-
-        labels = [label for _, label in severidades]
+        labels = [label for _, label in SEVERIDADES]
         values = [
             query.filter(Denuncia.severidade == value).count()
-            for value, _ in severidades
+            for value, _ in SEVERIDADES
         ]
         labels.append("Não definida")
         values.append(query.filter(or_(Denuncia.severidade.is_(None), Denuncia.severidade == "")).count())
@@ -534,38 +535,52 @@ def quantidade_severidade():
 def atualizar_denuncia(id):
     denuncia = Denuncia.query.get_or_404(id)
 
-    data = request.get_json(silent=True) or {}
+    data = request.get_json(silent=True)
 
-    status = data.get("status") or denuncia.status
-
-    status_permitidos = [item.value for item in StatusEnum]
-
-    if status not in status_permitidos:
+    if not isinstance(data, dict):
         return jsonify({
             "sucesso": False,
-            "mensagem": "Status inválido."
+            "mensagem": "Envie um objeto JSON válido."
         }), 400
 
+    campos = {}
+
     try:
-        responsavel = _clean_limited_text(data.get("responsavel"), 150)
-        depoimento_vitima = _clean_limited_text(data.get("depoimento_vitima"), 10000)
-        depoimento_acusado = _clean_limited_text(data.get("depoimento_acusado"), 10000)
-        depoimento_testemunha = _clean_limited_text(data.get("depoimento_testemunha"), 10000)
-        depoimento_admin = _clean_limited_text(data.get("depoimento_admin"), 10000)
+        if "status" in data:
+            status = data["status"]
+
+            if status not in [item.value for item in StatusEnum]:
+                raise ValueError("Status inválido.")
+
+            campos["Status"] = ("status", status)
+
+        if "severidade" in data:
+            severidade = _clean_limited_text(data["severidade"], 25)
+
+            if severidade is not None and severidade not in [value for value, _ in SEVERIDADES]:
+                raise ValueError("Severidade inválida.")
+
+            campos["Severidade"] = ("severidade", severidade)
+
+        campos_texto = {
+            "responsavel": ("Responsável", 150),
+            "depoimento_vitima": ("Depoimento da vítima", 10000),
+            "depoimento_acusado": ("Depoimento do acusado", 10000),
+            "depoimento_testemunha": ("Depoimento das testemunhas", 10000),
+            "depoimento_admin": ("Observações da administração", 10000),
+        }
+
+        for attr, (label, max_length) in campos_texto.items():
+            if attr in data:
+                campos[label] = (attr, _clean_limited_text(data[attr], max_length))
+
+        if not campos:
+            raise ValueError("Nenhuma alteração válida foi informada.")
     except ValueError as exc:
         return jsonify({
             "sucesso": False,
             "mensagem": str(exc)
         }), 400
-
-    campos = {
-        "Status": ("status", status),
-        "Responsável": ("responsavel", responsavel),
-        "Depoimento da vítima": ("depoimento_vitima", depoimento_vitima),
-        "Depoimento do acusado": ("depoimento_acusado", depoimento_acusado),
-        "Depoimento das testemunhas": ("depoimento_testemunha", depoimento_testemunha),
-        "Observações da administração": ("depoimento_admin", depoimento_admin),
-    }
 
     try:
         for label, (attr, new_value) in campos.items():

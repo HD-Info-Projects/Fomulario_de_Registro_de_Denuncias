@@ -46,10 +46,10 @@ def add_security_headers(response):
     response.headers.setdefault("Referrer-Policy", "same-origin")
     response.headers.setdefault("X-Frame-Options", "DENY")
 
-    if request.path.startswith(("/admin", "/export")):
-        response.headers.setdefault("Cache-Control", "no-store, private")
-        response.headers.setdefault("Pragma", "no-cache")
-        response.headers.setdefault("Expires", "0")
+    if request.path.startswith(("/admin", "/export", "/denuncias")):
+        response.headers["Cache-Control"] = "no-store, private"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
 
     if request.is_secure:
         response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")

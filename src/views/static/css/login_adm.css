@@ -134,7 +134,29 @@ body {
    🔥 RESPONSIVIDADE
    =============================== */
 
-/* Celulares pequenos (320px - 399px) */
+/* Tablets e celulares (até 768px) */
+@media (max-width: 768px) {
+    .login-wrapper {
+        padding: 30px;
+    }
+
+    .login-box {
+        max-width: 90%;
+    }
+
+    .input-group input {
+        font-size: 16px; /* evita zoom no iOS */
+    }
+}
+
+/* Celulares médios (até 480px) */
+@media (max-width: 480px) {
+    .login-box {
+        padding: 36px 28px;
+    }
+}
+
+/* Celulares pequenos (até 400px) */
 @media (max-width: 400px) {
 
     .login-box {
@@ -157,31 +179,9 @@ body {
         font-size: 14px;
     }
 
-    .input-group input {
-        font-size: 14px;
-    }
-
     .login-box button {
         padding: 12px;
         font-size: 14px;
         border-radius: 8px;
-    }
-}
-
-/* Celulares médios (400px - 480px) */
-@media (max-width: 480px) {
-    .login-box {
-        padding: 36px 28px;
-    }
-}
-
-/* Tablets pequenos (600px - 768px) */
-@media (max-width: 768px) {
-    .login-wrapper {
-        padding: 30px;
-    }
-
-    .login-box {
-        max-width: 90%;
     }
 }

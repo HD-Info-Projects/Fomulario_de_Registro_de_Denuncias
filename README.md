@@ -6,7 +6,21 @@ Aplicação Flask para registro, análise e exportação de denúncias.
 
 O frontend usa o tema claro no primeiro acesso. O botão no cabeçalho alterna entre os temas claro e escuro, incluindo o login e a área administrativa. A escolha é salva no navegador e mantida ao navegar ou recarregar a página.
 
-Testes do tema (Node.js, sem dependências adicionais): `node --test tests/theme.test.cjs`.
+O botão de tema exibe apenas o ícone de sol/lua e mantém um nome acessível e uma dica de ação.
+
+## Testes
+
+- Frontend (Node.js, sem dependências adicionais): `node --test tests/*.test.cjs`.
+- Backend (com as dependências do projeto instaladas): `python -m unittest discover -s tests -p 'test_*.py'`.
+
+Os testes do backend usam SQLite na memória e arquivos temporários, sem carregar o `.env` nem acessar o banco real.
+
+## Análise das denúncias
+
+- Alterações parciais preservam os campos não enviados. Um texto vazio ou `null` limpa explicitamente um campo opcional.
+- A severidade pode ser definida como baixa, média, alta, crítica ou não definida, com registro no histórico.
+- Os filtros de datas do painel, dashboard e exportações usam a **data de cadastro**. A data da ocorrência continua visível nos detalhes da denúncia.
+- Depois do cadastro, o navegador é redirecionado à confirmação. Erros preservam os textos preenchidos; os anexos precisam ser selecionados novamente.
 
 ## Execução local
 
@@ -33,6 +47,7 @@ O usuário admin inicial é criado de forma idempotente quando `ADMIN_EMAIL` e `
 ## Observações
 
 - Não coloque `.env` dentro da imagem Docker.
+- O arquivo local `token.txt` também é excluído do build. Se uma imagem antiga já tiver incluído uma credencial real, reconstrua a imagem e revogue/substitua a credencial exposta.
 - Em produção, use `SESSION_COOKIE_SECURE=1` atrás de HTTPS.
 - No Docker Compose, o rate limit usa Redis. Em execução local, `RATELIMIT_STORAGE_URI=memory://` é suficiente para desenvolvimento.
 - Se a aplicação ficar atrás de proxy reverso confiável, ajuste `TRUSTED_PROXY_HOPS` para preservar IP/protocolo corretos.

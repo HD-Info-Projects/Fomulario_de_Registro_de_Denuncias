@@ -85,7 +85,7 @@ body {
     border: none;
     outline: none;
     width: 100%;
-    resize: none;
+    resize: vertical;
     color: var(--text);
     font-size: 15px;
 }

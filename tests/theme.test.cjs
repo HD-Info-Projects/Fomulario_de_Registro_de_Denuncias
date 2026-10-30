@@ -84,15 +84,16 @@ test("primeiro acesso é claro, sem salvar uma escolha automaticamente", () => {
     assert.equal(env.storage.size, 0);
     env.ready();
     assert.equal(env.button.hidden, false);
-    assert.equal(env.label.textContent, "Tema escuro");
+    assert.equal(env.label.textContent, "");
     assert.equal(env.attributes["aria-label"], "Ativar tema escuro");
+    assert.equal(env.button.title, "Ativar tema escuro");
 });
 
 test("preferência escura é aplicada antes de inicializar o botão", () => {
     const env = themeEnvironment("dark");
     assert.equal(env.root.dataset.theme, "dark");
     env.ready();
-    assert.equal(env.label.textContent, "Tema claro");
+    assert.equal(env.label.textContent, "");
     assert.equal(env.attributes["aria-label"], "Ativar tema claro");
     assert.equal(env.button.title, "Ativar tema claro");
 });
@@ -109,7 +110,9 @@ test("cliques alternam, salvam e restauram a escolha ao recarregar", () => {
     env.click();
     assert.equal(env.root.dataset.theme, "dark");
     assert.equal(env.storage.get(storageKey), "dark");
-    assert.equal(env.label.textContent, "Tema claro");
+    assert.equal(env.label.textContent, "");
+    assert.equal(env.attributes["aria-label"], "Ativar tema claro");
+    assert.equal(env.button.title, "Ativar tema claro");
     assert.equal(themeEnvironment(env.storage.get(storageKey)).root.dataset.theme, "dark");
     env.click();
     assert.equal(env.root.dataset.theme, "light");
@@ -144,7 +147,8 @@ test("mudanças em outra aba sincronizam o tema e o botão", () => {
     assert.equal(env.root.dataset.theme, "light");
     env.storageEvent(storageKey, "dark");
     assert.equal(env.root.dataset.theme, "dark");
-    assert.equal(env.label.textContent, "Tema claro");
+    assert.equal(env.label.textContent, "");
+    assert.equal(env.attributes["aria-label"], "Ativar tema claro");
     env.storageEvent(storageKey, null);
     assert.equal(env.root.dataset.theme, "light");
     env.storageEvent(storageKey, "dark");

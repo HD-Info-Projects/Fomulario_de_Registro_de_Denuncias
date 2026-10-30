@@ -100,6 +100,7 @@ class Denuncia(db.Model):
             "categoria": self.categoria,
             "frequencia": self.frequencia,
             "data": self.data.strftime("%d/%m/%Y") if self.data else None,
+            "data_public": self.data_public.strftime("%d/%m/%Y") if self.data_public else None,
             "testemunha": self.testemunha,
             "nomes_testemunhas": self.nomes_testemunhas,
             "descricao_do_fato": self.descricao_do_fato,

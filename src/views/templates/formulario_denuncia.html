@@ -30,27 +30,27 @@
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" name="nome" placeholder="Nome completo" maxlength="150" required>
+                        <input type="text" name="nome" value="{{ form_data.get('nome', '') }}" placeholder="Nome completo" maxlength="150" required>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="number" name="idade" placeholder="Idade" min="0" max="130" required>
+                        <input type="number" name="idade" value="{{ form_data.get('idade', '') }}" placeholder="Idade" min="0" max="130" required>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-phone"></i>
-                        <input type="text" name="telefone" placeholder="Telefone / WhatsApp" maxlength="20" required>
+                        <input type="text" name="telefone" value="{{ form_data.get('telefone', '') }}" placeholder="Telefone / WhatsApp" maxlength="20" required>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" name="email" placeholder="E-mail (opcional)" maxlength="255">
+                        <input type="email" name="email" value="{{ form_data.get('email', '') }}" placeholder="E-mail (opcional)" maxlength="255">
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" name="setor" placeholder="Setor/Cargo" maxlength="255" required>
+                        <input type="text" name="setor" value="{{ form_data.get('setor', '') }}" placeholder="Setor/Cargo" maxlength="255" required>
                     </div>
 
                 </div>
@@ -58,22 +58,22 @@
 
                 <!-- ===== Dados do Ofensor ===== -->
                 <div class="section">
-                    <h2>Dados da Ofensor</h2>
+                    <h2>Dados do Ofensor</h2>
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                            <input type="text" name="nomeOfensor" placeholder="Nome do Ofensor..." maxlength="150" required>
+                            <input type="text" name="nomeOfensor" value="{{ form_data.get('nomeOfensor', '') }}" placeholder="Nome do Ofensor..." maxlength="150" required>
                     </div>
 
 
                     <div class="input-group">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" name="setorOfensor" placeholder="Setor/Cargo" maxlength="100" required>
+                        <input type="text" name="setorOfensor" value="{{ form_data.get('setorOfensor', '') }}" placeholder="Setor/Cargo" maxlength="100" required>
                     </div>
 
                     <div class="input-group" style="align-items: flex-start;">
                         <i class="fa-solid fa-align-left" style="margin-top: 5px;"></i>
-                        <textarea name="descricaoOfensor" rows="4" maxlength="5000" placeholder="Descrição do Ofensor..." required></textarea>
+                        <textarea name="descricaoOfensor" rows="4" maxlength="5000" placeholder="Descrição do Ofensor..." required>{{ form_data.get('descricaoOfensor', '') }}</textarea>
                     </div>
 
                 </div>
@@ -89,27 +89,27 @@
                         <i class="fa-solid fa-list"></i>
                         <select name="tipo_situacao" required>
                             <option value="">Tipo da situação...</option>
-                            <option value="Violência Física">Violência Física</option>
-                            <option value="Violência Psicológica">Violência Psicológica</option>
-                            <option value="Assédio">Assédio</option>
-                            <option value="Discriminação">Discriminação</option>
-                            <option value="Outro">Outro</option>
+                            <option value="Violência Física" {% if form_data.get('tipo_situacao') == 'Violência Física' %}selected{% endif %}>Violência Física</option>
+                            <option value="Violência Psicológica" {% if form_data.get('tipo_situacao') == 'Violência Psicológica' %}selected{% endif %}>Violência Psicológica</option>
+                            <option value="Assédio" {% if form_data.get('tipo_situacao') == 'Assédio' %}selected{% endif %}>Assédio</option>
+                            <option value="Discriminação" {% if form_data.get('tipo_situacao') == 'Discriminação' %}selected{% endif %}>Discriminação</option>
+                            <option value="Outro" {% if form_data.get('tipo_situacao') == 'Outro' %}selected{% endif %}>Outro</option>
                         </select>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-location-dot"></i>
-                        <input type="text" name="frequencia" placeholder="Frequência..." maxlength="255" required>
+                        <input type="text" name="frequencia" value="{{ form_data.get('frequencia', '') }}" placeholder="Frequência..." maxlength="255" required>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-calendar"></i>
-                        <input type="date" name="data_ocorrencia" required>
+                        <input type="date" name="data_ocorrencia" value="{{ form_data.get('data_ocorrencia', '') }}" required>
                     </div>
 
                     <div class="input-group" style="align-items: flex-start;">
                         <i class="fa-solid fa-align-left" style="margin-top: 5px;"></i>
-                        <textarea name="descricaoFatos" rows="4" maxlength="10000" placeholder="Descreva detalhadamente os fatos..." required></textarea>
+                        <textarea name="descricaoFatos" rows="4" maxlength="10000" placeholder="Descreva detalhadamente os fatos..." required>{{ form_data.get('descricaoFatos', '') }}</textarea>
                     </div>
                 </div>
 
@@ -121,14 +121,14 @@
                         <i class="fa-solid fa-users"></i>
                         <select name="testemunhas" required>
                             <option value="">Existem testemunhas?</option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
+                            <option value="Sim" {% if form_data.get('testemunhas') == 'Sim' %}selected{% endif %}>Sim</option>
+                            <option value="Não" {% if form_data.get('testemunhas') == 'Não' %}selected{% endif %}>Não</option>
                         </select>
                     </div>
 
                     <div class="input-group">
                         <i class="fa-solid fa-id-card"></i>
-                        <input type="text" name="nome_testemunhas" maxlength="5000" placeholder="Nome das testemunhas">
+                        <input type="text" name="nome_testemunhas" value="{{ form_data.get('nome_testemunhas', '') }}" maxlength="5000" placeholder="Nome das testemunhas">
                     </div>
                 </div>
 
@@ -151,6 +151,7 @@
 
                         <small>
                             Você pode selecionar uma ou mais fotos ou vídeos como prova da denúncia.
+                            Se precisar corrigir o formulário após um erro, selecione os arquivos novamente.
                         </small>
                     </div>
                 </div>

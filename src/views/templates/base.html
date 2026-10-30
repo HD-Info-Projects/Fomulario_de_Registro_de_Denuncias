@@ -84,7 +84,14 @@
     <!-- FOOTER -->
     <footer>
         {% block footer %}
-        <p>&copy; 2025 - Aplicação - HD Info</p>
+            <p class="footer-content">
+                <span>&copy; 2025 - Aplicação -</span>
+                <img
+                    src="{{ url_for('static', filename='img/logo_HD_Info.PNG') }}"
+                    alt="HD Info"
+                    class="footer-logo"
+                >
+            </p>
         {% endblock %}
     </footer>
 

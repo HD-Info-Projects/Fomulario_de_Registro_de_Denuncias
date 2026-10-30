@@ -142,6 +142,29 @@ footer {
     border-top: 1px solid var(--border);
 }
 
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.footer-logo {
+    display: block;
+    height: 36px;
+    width: auto;
+}
+
+.footer-logo {
+    filter: brightness(0);
+}
+
+:root[data-theme="dark"] .footer-logo {
+    filter: none;
+}
+
+
 /* ===== ELEMENTOS GLOBAIS ===== */
 h1, h2, h3 {
     font-weight: 600;

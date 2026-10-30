@@ -5,7 +5,9 @@ from flask import (
     render_template,
     request,
     flash,
-    current_app
+    current_app,
+    redirect,
+    url_for
 )
 
 from datetime import date, datetime
@@ -106,11 +108,11 @@ def _prepare_uploads(files, errors):
 
     return prepared
 
-def _render_form_errors(errors):
+def _render_form_errors(errors, form_data):
     for error in errors:
         flash(error, "error")
 
-    return render_template("formulario_denuncia.html"), 400
+    return render_template("formulario_denuncia.html", form_data=form_data), 400
 
 @denuncia_bp.route("/formulario", methods=["GET", "POST"])
 @limiter.limit("10 per hour", methods=["POST"])
@@ -152,7 +154,7 @@ def form_denuncia():
         prepared_uploads = _prepare_uploads(request.files.getlist("arquivos"), errors)
 
         if errors:
-            return _render_form_errors(errors)
+            return _render_form_errors(errors, data)
 
         obj_vitima = Vitima(
             nome=nome,
@@ -181,11 +183,10 @@ def form_denuncia():
         )
 
         upload_folder = current_app.config["UPLOAD_FOLDER"]
-        os.makedirs(upload_folder, exist_ok=True)
-
         saved_files = []
 
         try:
+            os.makedirs(upload_folder, exist_ok=True)
             db.session.add(obj_vitima)
             db.session.add(obj_ofensor)
             db.session.flush()
@@ -198,8 +199,8 @@ def form_denuncia():
 
             for upload in prepared_uploads:
                 file_path = os.path.join(upload_folder, upload["filename"])
-                upload["file"].save(file_path)
                 saved_files.append(file_path)
+                upload["file"].save(file_path)
 
                 db.session.add(DenunciaAnexos(
                     obj_denuncia.id,
@@ -220,11 +221,11 @@ def form_denuncia():
 
             current_app.logger.exception("Erro ao registrar denúncia.")
             flash("Não foi possível registrar a denúncia. Tente novamente.", "error")
-            return render_template("formulario_denuncia.html"), 500
+            return render_template("formulario_denuncia.html", form_data=data), 500
 
-        return render_template("success.html")
+        return redirect(url_for("denuncias.page_success"), code=303)
 
-    return render_template("formulario_denuncia.html")
+    return render_template("formulario_denuncia.html", form_data={})
 
 
 @denuncia_bp.route("/success", methods=["GET"])

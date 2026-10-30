@@ -73,12 +73,12 @@
         </div>
 
         <div class="filtro-campo">
-            <label for="data_inicio">Data inicial</label>
+            <label for="data_inicio">Cadastro: início</label>
             <input type="date" id="data_inicio" name="data_inicio" value="{{ filtros.data_inicio }}">
         </div>
 
         <div class="filtro-campo">
-            <label for="data_fim">Data final</label>
+            <label for="data_fim">Cadastro: fim</label>
             <input type="date" id="data_fim" name="data_fim" value="{{ filtros.data_fim }}">
         </div>
 
@@ -187,6 +187,7 @@
                         <p><strong>Categoria:</strong> {{ d.categoria }}</p>
                         <p><strong>Frequência:</strong> {{ d.frequencia }}</p>
                         <p><strong>Data da ocorrência:</strong> {{ d.data }}</p>
+                        <p><strong>Data de cadastro:</strong> {{ d.data_public or "Não informada" }}</p>
                         <p><strong>Testemunha:</strong> {{ d.testemunha }}</p>
                         <p><strong>Nomes testemunhas:</strong> {{ d.nomes_testemunhas or "Nenhuma" }}</p>
                         <p><strong>Status:</strong> {{ d.status or "Pendente" }}</p>
@@ -337,6 +338,21 @@
                             <option value="finalizado" {% if d.status == "finalizado" %}selected{% endif %}>
                                 Finalizado
                             </option>
+                        </select>
+                    </div>
+
+                    <div class="info-group">
+                        <h4>
+                            <i class="fa-solid fa-gauge-high"></i>
+                            <label for="severidade-{{ d.id }}">Severidade da Denúncia</label>
+                        </h4>
+
+                        <select name="severidade" id="severidade-{{ d.id }}" class="select-status">
+                            {% for value, label in severidade_options %}
+                                <option value="{{ value }}" {% if value == (d.severidade or '') %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
                         </select>
                     </div>
 

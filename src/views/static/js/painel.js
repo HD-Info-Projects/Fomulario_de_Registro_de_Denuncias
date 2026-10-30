@@ -15,6 +15,7 @@ function salvarDenuncia(btn) {
     const form = btn.closest(".form-analise");
 
     const status = form.querySelector("[name='status']").value;
+    const severidade = form.querySelector("[name='severidade']").value;
     const responsavel = form.querySelector("[name='responsavel']").value;
 
     if (status === "finalizado") {
@@ -32,6 +33,7 @@ function salvarDenuncia(btn) {
 
     const dados = {
         status: status,
+        severidade: severidade,
         responsavel: responsavel,
         depoimento_vitima: depoimentoVitima,
         depoimento_acusado: depoimentoAcusado,
