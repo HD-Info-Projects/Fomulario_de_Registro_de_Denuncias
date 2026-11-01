@@ -14,6 +14,8 @@ class Denuncia(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     categoria = db.Column(db.String(255), nullable=False)
+    tipo_situacao_id = db.Column(db.Integer, db.ForeignKey("tipos_situacao.id"), nullable=True, index=True)
+    tipo_situacao = db.relationship("TipoSituacao", back_populates="denuncias")
     frequencia = db.Column(db.String(255), nullable=False)
     data = db.Column(db.Date, nullable=False, index=True)
     testemunha = db.Column(db.String(10), nullable=False)

@@ -50,6 +50,15 @@
                 Painel
             </a>
 
+            {% if current_user.is_authenticated and current_user.administrador_principal %}
+            <a href="{{ url_for('administradores.listar') }}" {% if request.blueprint == 'administradores' %}aria-current="page"{% endif %}>
+                <i class="fa-solid fa-users-gear" aria-hidden="true"></i> Administradores
+            </a>
+            <a href="{{ url_for('tipos_situacao.listar') }}" {% if request.blueprint == 'tipos_situacao' %}aria-current="page"{% endif %}>
+                <i class="fa-solid fa-tags" aria-hidden="true"></i> Tipos de situação
+            </a>
+            {% endif %}
+
             <form action="{{ url_for('admin.logout') }}" method="POST" class="nav-logout-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="nav-logout-button">
@@ -72,7 +81,7 @@
             {% if messages %}
                 <div class="flash-messages">
                     {% for category, message in messages %}
-                        <div class="flash-message {{ category }}">{{ message }}</div>
+                        <div class="flash-message {{ category }}" role="{{ 'alert' if category == 'error' else 'status' }}">{{ message }}</div>
                     {% endfor %}
                 </div>
             {% endif %}

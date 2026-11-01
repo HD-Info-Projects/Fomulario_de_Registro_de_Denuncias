@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Tipos de situação{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block content %}
+<section class="management">
+    {% include 'partials/management_navigation.html' %}
+    <div class="management-heading"><div><p class="management-eyebrow">Configuração das denúncias</p><h1><i class="fa-solid fa-tags" aria-hidden="true"></i> Tipos de situação</h1><p>Organize as opções disponíveis para registrar uma denúncia.</p></div><a class="management-button primary" href="{{ url_for('tipos_situacao.criar') }}"><i class="fa-solid fa-plus" aria-hidden="true"></i> Novo tipo de situação</a></div>
+    <div class="management-stats"><div><span>Tipos cadastrados</span><strong>{{ total }}</strong></div><div><span>Disponíveis no formulário</span><strong>{{ ativos }}</strong></div><div><span>Desativados</span><strong>{{ total - ativos }}</strong></div></div>
+    <form class="management-filters" method="GET" action="{{ url_for('tipos_situacao.listar') }}">
+        <div class="management-field grow"><label for="busca">Buscar tipo de situação</label><input id="busca" name="q" value="{{ busca }}" placeholder="Nome ou descrição" maxlength="255"></div>
+        <div class="management-field"><label for="situacao">Situação</label><select id="situacao" name="status">{% for value, label in [('todos', 'Todos os tipos'), ('ativos', 'Ativos'), ('inativos', 'Desativados')] %}<option value="{{ value }}" {% if situacao == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+        <button class="management-button primary" type="submit">Filtrar</button><a class="management-button secondary" href="{{ url_for('tipos_situacao.listar') }}">Limpar</a>
+    </form>
+    <div class="management-table-wrap"><table class="management-table">
+        <caption class="management-sr-only">Tipos de situação encontrados: {{ pagination.total }}</caption>
+        <thead><tr><th scope="col">Tipo de situação</th><th scope="col">Denúncias vinculadas</th><th scope="col">Situação</th><th scope="col">Ações</th></tr></thead>
+        <tbody>{% for tipo in pagination.items %}<tr>
+            <td><strong>{{ tipo.nome }}</strong><p class="management-description">{{ tipo.descricao or 'Sem descrição adicional.' }}</p></td>
+            <td>{{ counts.get(tipo.id, 0) }}</td>
+            <td><span class="management-badge {{ 'active' if tipo.ativo else 'inactive' }}">{{ 'Ativo' if tipo.ativo else 'Desativado' }}</span></td>
+            <td><div class="management-actions"><a class="management-button secondary small" href="{{ url_for('tipos_situacao.editar', tipo_id=tipo.id) }}">Editar</a><form method="POST" action="{{ url_for('tipos_situacao.alterar_status', tipo_id=tipo.id) }}" data-confirm="{{ 'O tipo deixará de aparecer no formulário público. As denúncias existentes serão preservadas.' if tipo.ativo else 'O tipo voltará a aparecer no formulário público.' }}" data-confirm-title="{{ 'Desativar tipo de situação' if tipo.ativo else 'Reativar tipo de situação' }}" data-confirm-target="{{ tipo.nome }}" data-confirm-label="{{ 'Desativar tipo' if tipo.ativo else 'Reativar tipo' }}" data-confirm-danger="{{ 'true' if tipo.ativo else 'false' }}" data-loading-label="Alterando…"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="ativo" value="{{ '0' if tipo.ativo else '1' }}"><button class="management-button {{ 'danger' if tipo.ativo else 'secondary' }} small" type="submit">{{ 'Desativar' if tipo.ativo else 'Reativar' }}</button></form></div></td>
+        </tr>{% else %}<tr><td class="management-empty" colspan="4">Nenhum tipo encontrado. Cadastre um novo tipo ou ajuste os filtros.</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% include 'partials/management_pagination.html' %}
+    <p class="management-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Apenas tipos ativos aparecem no formulário público. Renomear ou desativar um tipo não altera a classificação registrada nas denúncias antigas.</p>
+</section>
+{% endblock %}
+{% block scripts %}
+{% include 'partials/management_dialog.html' %}
+<script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+{% endblock %}

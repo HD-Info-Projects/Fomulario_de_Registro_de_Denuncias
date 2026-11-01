@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Administradores{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<section class="management">
+    {% include 'partials/management_navigation.html' %}
+    <div class="management-heading">
+        <div>
+            <p class="management-eyebrow">Administração do sistema</p>
+            <h1><i class="fa-solid fa-users-gear" aria-hidden="true"></i> Administradores</h1>
+            <p>Gerencie o acesso da equipe sem perder os registros das denúncias.</p>
+        </div>
+        <a class="management-button primary" href="{{ url_for('administradores.criar') }}"><i class="fa-solid fa-plus" aria-hidden="true"></i> Novo administrador</a>
+    </div>
+
+    <div class="management-stats">
+        <div><span>Contas cadastradas</span><strong>{{ total }}</strong></div>
+        <div><span>Contas ativas</span><strong>{{ ativos }}</strong></div>
+        <div><span>Principais ativos</span><strong>{{ principais }}</strong></div>
+    </div>
+
+    <form class="management-filters" method="GET" action="{{ url_for('administradores.listar') }}">
+        <div class="management-field grow"><label for="busca">Buscar administrador</label><input id="busca" name="q" value="{{ busca }}" placeholder="Nome ou e-mail" maxlength="255"></div>
+        <div class="management-field"><label for="situacao">Situação</label><select id="situacao" name="status">
+            {% for value, label in [('todos', 'Todas as contas'), ('ativos', 'Ativas'), ('inativos', 'Desativadas')] %}
+                <option value="{{ value }}" {% if situacao == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select></div>
+        <button class="management-button primary" type="submit">Filtrar</button>
+        <a class="management-button secondary" href="{{ url_for('administradores.listar') }}">Limpar</a>
+    </form>
+
+    <div class="management-table-wrap">
+        <table class="management-table">
+            <caption class="management-sr-only">Administradores encontrados: {{ pagination.total }}</caption>
+            <thead><tr><th scope="col">Administrador</th><th scope="col">Perfil</th><th scope="col">Situação</th><th scope="col">Ações</th></tr></thead>
+            <tbody>
+            {% for usuario in pagination.items %}
+                <tr>
+                    <td><div class="management-identity"><span class="management-avatar" aria-hidden="true">{{ usuario.nome[:1] | upper }}</span><div><strong>{{ usuario.nome }}</strong><span>{{ usuario.email }}</span>{% if usuario.id == current_user.id %}<small>Sua conta</small>{% endif %}</div></div></td>
+                    <td><span class="management-badge {% if usuario.administrador_principal %}principal{% endif %}">{{ 'Principal' if usuario.administrador_principal else 'Administrador' }}</span></td>
+                    <td><span class="management-badge {{ 'active' if usuario.ativo else 'inactive' }}">{{ 'Ativa' if usuario.ativo else 'Desativada' }}</span></td>
+                    <td><div class="management-actions">
+                        <a class="management-button secondary small" href="{{ url_for('administradores.editar', usuario_id=usuario.id) }}">Editar</a>
+                        <form method="POST" action="{{ url_for('administradores.alterar_status', usuario_id=usuario.id) }}" data-confirm="{{ 'As sessões abertas serão revogadas, e o histórico será preservado.' if usuario.ativo else 'Esta conta poderá entrar novamente no sistema.' }}" data-confirm-title="{{ 'Desativar administrador' if usuario.ativo else 'Reativar administrador' }}" data-confirm-target="{{ usuario.nome }}" data-confirm-label="{{ 'Desativar conta' if usuario.ativo else 'Reativar conta' }}" data-confirm-danger="{{ 'true' if usuario.ativo else 'false' }}" data-loading-label="Alterando…">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="ativo" value="{{ '0' if usuario.ativo else '1' }}">
+                            <button class="management-button {{ 'danger' if usuario.ativo else 'secondary' }} small" type="submit" {% if usuario.id == current_user.id %}disabled title="Você não pode desativar a própria conta."{% endif %}>{{ 'Desativar' if usuario.ativo else 'Reativar' }}</button>
+                        </form>
+                    </div></td>
+                </tr>
+            {% else %}
+                <tr><td class="management-empty" colspan="4">Nenhum administrador encontrado para os filtros informados.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'partials/management_pagination.html' %}
+    <p class="management-note"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Contas desativadas não podem acessar o sistema. Seus registros no histórico são mantidos.</p>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+{% include 'partials/management_dialog.html' %}
+<script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+{% endblock %}

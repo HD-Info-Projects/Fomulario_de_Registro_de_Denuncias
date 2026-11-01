@@ -10,6 +10,8 @@
 {% block content %}
 <section class="admin-home">
 
+    <span class="admin-role-badge">{{ 'Administrador principal' if current_user.administrador_principal else 'Administrador' }}</span>
+
     <h1>
         <svg class="icon-lg" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 12.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5zM4.5 20.25a8.25 8.25 0 0116.5 0v.75H4.5v-.75z"/>
@@ -18,16 +20,31 @@
     </h1>
 
     <p>
-        Bem-vindo ao painel de controle.
-        Esta é uma área restrita para usuários autenticados.
+        Bem-vindo, {{ current_user.nome }}. Escolha abaixo a seção que deseja acessar.
     </p>
 
-    <a href="{{ url_for('admin.dashboard') }}" class="btn-primary">
-        Acessar Dashboard
-    </a>
-
-    <a href="{{ url_for('admin.painel') }}" class="btn-primary">
-        Acessar Painel de Denúncias
-    </a>
+    <div class="admin-access-grid">
+        <a href="{{ url_for('admin.painel') }}" class="admin-access-card">
+            <span class="admin-access-icon" aria-hidden="true"><i class="fa-solid fa-file-shield"></i></span>
+            <div><h2>Denúncias</h2><p>Consulte os casos, registre depoimentos e acompanhe as análises.</p><span class="admin-access-cta">Acessar painel <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </a>
+        <a href="{{ url_for('admin.dashboard') }}" class="admin-access-card">
+            <span class="admin-access-icon" aria-hidden="true"><i class="fa-solid fa-chart-column"></i></span>
+            <div><h2>Dashboard e relatórios</h2><p>Visualize indicadores, aplique filtros e exporte os relatórios.</p><span class="admin-access-cta">Ver indicadores <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </a>
+        {% if current_user.administrador_principal %}
+        <a href="{{ url_for('administradores.listar') }}" class="admin-access-card">
+            <span class="admin-access-icon" aria-hidden="true"><i class="fa-solid fa-users-gear"></i></span>
+            <div><h2>Administradores</h2><p>Cadastre a equipe, edite os dados e gerencie as permissões de acesso.</p><span class="admin-access-cta">Gerenciar administradores <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </a>
+        <a href="{{ url_for('tipos_situacao.listar') }}" class="admin-access-card">
+            <span class="admin-access-icon" aria-hidden="true"><i class="fa-solid fa-tags"></i></span>
+            <div><h2>Tipos de situação</h2><p>Configure as opções de denúncia disponíveis no formulário público.</p><span class="admin-access-cta">Gerenciar tipos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </a>
+        {% endif %}
+    </div>
+    {% if not current_user.administrador_principal %}
+    <p class="admin-access-notice"><i class="fa-solid fa-lock" aria-hidden="true"></i> A gestão de administradores e tipos de situação é exclusiva do administrador principal.</p>
+    {% endif %}
 </section>
 {% endblock %}

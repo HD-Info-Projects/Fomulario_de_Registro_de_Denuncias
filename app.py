@@ -11,7 +11,9 @@ from flask_login import (
 from src.settings.config import Config
 from src.settings.extensions import db, csrf, limiter
 from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.security import generate_password_hash
 from sqlalchemy.exc import IntegrityError
+import click
 import os
 
 app = Flask(
@@ -63,25 +65,34 @@ from src.models import Ofensor_model
 from src.models import Denuncia_model
 from src.models import Denuncia_anexos_model
 from src.models import Denuncia_historico_model
+from src.models import Tipo_situacao_model
 
 # Import Controllers
 
 from src.controllers.admin.login_admin_controller import admin_bp
 from src.controllers.users.denuncia_controller import denuncia_bp
 from src.controllers.admin.exportar_controller import exportar_bp
+from src.controllers.admin.admin_controller import administradores_bp
+from src.controllers.admin.tipos_situacao_controller import tipos_situacao_bp
 
 # Register Routes
 
 app.register_blueprint(admin_bp) 
 app.register_blueprint(denuncia_bp)
 app.register_blueprint(exportar_bp)
+app.register_blueprint(administradores_bp)
+app.register_blueprint(tipos_situacao_bp)
 
 # Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
     try:
-        return db.session.get(Usuario_model.Usuario, int(user_id))
-    except (TypeError, ValueError):
+        identity, version = user_id.split(":")
+        usuario = db.session.get(Usuario_model.Usuario, int(identity))
+        if not usuario or not usuario.ativo or usuario.versao_sessao != int(version):
+            return None
+        return usuario
+    except (AttributeError, TypeError, ValueError):
         return None
 
 
@@ -104,7 +115,7 @@ def create_admin_from_env():
     if existing_user:
         return "exists"
 
-    db.session.add(Usuario_model.Usuario(name, email, password))
+    db.session.add(Usuario_model.Usuario(name, email, generate_password_hash(password)))
 
     try:
         db.session.commit()
@@ -125,6 +136,24 @@ def create_admin_command():
         print("Admin user already exists.")
     else:
         print("ADMIN_EMAIL/ADMIN_PASSWORD not set; skipping admin creation.")
+
+
+@app.cli.command("set-principal")
+@click.option("--email", required=True, help="E-mail de uma conta ativa já cadastrada.")
+def set_principal_command(email):
+    usuario = Usuario_model.Usuario.query.filter_by(email=email.strip().lower()).first()
+    if not usuario:
+        raise click.ClickException("Administrador não encontrado. Cadastre a conta antes de promovê-la.")
+    if not usuario.ativo:
+        raise click.ClickException("A conta está desativada. Use uma conta ativa.")
+    if usuario.administrador_principal:
+        click.echo("A conta já é administrador principal.")
+        return
+
+    usuario.administrador_principal = True
+    usuario.invalidate_sessions()
+    db.session.commit()
+    click.echo("Administrador principal definido. Entre novamente para acessar as novas seções.")
 
 # Main
 @app.route("/", methods=["GET"])

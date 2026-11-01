@@ -22,6 +22,48 @@ Os testes do backend usam SQLite na memória e arquivos temporários, sem carreg
 - Os filtros de datas do painel, dashboard e exportações usam a **data de cadastro**. A data da ocorrência continua visível nos detalhes da denúncia.
 - Depois do cadastro, o navegador é redirecionado à confirmação. Erros preservam os textos preenchidos; os anexos precisam ser selecionados novamente.
 
+## Administradores e tipos de situação
+
+As seções **Administradores** (`/admin/administradores`) e **Tipos de situação** (`/admin/tipos-situacao`) ficam disponíveis somente para administradores principais. Os demais administradores continuam acessando as denúncias, o dashboard e as exportações.
+
+- Administradores principais podem cadastrar contas, editar nome/e-mail/perfil, redefinir senhas e desativar/reativar o acesso.
+- A própria conta não pode ser desativada nem perder o próprio perfil principal. É possível criar outros principais para compartilhar a gestão com responsabilidade.
+- Contas não são apagadas: a desativação preserva a autoria dos históricos. Desativação, troca de senha e mudança de perfil revogam sessões anteriores; reativar a conta não restaura essas sessões.
+- Tipos de situação têm nome, descrição opcional e situação ativo/inativo. Apenas os ativos aparecem no formulário público.
+- Cada denúncia mantém o nome da classificação no momento do registro. Renomear ou desativar um tipo não reescreve as denúncias antigas.
+- Se todos os tipos forem desativados, o formulário informa a indisponibilidade e impede o envio até que um tipo seja reativado.
+
+### Usar o CRUD pela interface
+
+1. Entre como administrador principal e abra **Administradores** pelo cartão da página inicial ou pela navbar.
+2. Use **Novo administrador** para cadastrar e **Editar** para alterar os dados. Na edição, deixe as senhas vazias para manter a senha atual.
+3. Para desativar/reativar, use a ação na tabela e confira o nome na janela de confirmação antes de prosseguir. Cancelar ou pressionar Escape não envia a alteração.
+4. A seção **Tipos de situação** funciona da mesma forma e pode ser acessada pelas abas internas. Novos tipos ativos aparecem no formulário público.
+
+As telas conferem a confirmação de senha, mostram o limite da descrição e bloqueiam cliques repetidos durante o envio. As mensagens de sucesso/erro vêm do backend: não há cadastro fictício ou armazenamento de contas no navegador. A configuração inicial do banco e do primeiro principal continua sendo necessária; os cadastros do dia a dia são feitos pelas telas.
+
+### Atualizar uma instalação existente
+
+Faça backup do banco e aplique a migração antes de reiniciar a aplicação com o código novo:
+
+```bash
+alembic upgrade head
+python -m flask --app app set-principal --email "seu-email-cadastrado@exemplo.com"
+```
+
+A migração preserva usuários e denúncias, importa os cinco tipos originais e as classificações legadas. **Nenhuma conta é promovida automaticamente.** O comando `set-principal` exige uma conta ativa já cadastrada. Se ainda não houver conta, configure `ADMIN_EMAIL`/`ADMIN_PASSWORD` e execute `python -m flask --app app create-admin` antes de promovê-la.
+
+Entre novamente no sistema após a atualização/promoção. Sessões de versões anteriores são encerradas por segurança. Os links das novas seções aparecerão para a conta principal; o botão de tema permanece à direita da navbar.
+
+No Docker, depois de atualizar os arquivos:
+
+```bash
+docker compose build
+docker compose run --rm migrate
+docker compose up -d
+docker compose exec web python -m flask --app app set-principal --email "seu-email-cadastrado@exemplo.com"
+```
+
 ## Execução local
 
 1. Crie um `.env` a partir de `.env.example`.

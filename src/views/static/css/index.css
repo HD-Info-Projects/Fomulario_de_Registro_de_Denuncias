@@ -1,25 +1,25 @@
 /* ===== HOME ADMIN PAGE ===== */
 .admin-home {
-    text-align: center;
-    margin-top: 6rem;
-    max-width: 600px;
+    text-align: left;
+    margin-top: 1rem;
+    max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
-    padding: 2rem;
+    padding: 1rem 0;
 }
 
 .admin-home h1 {
-    font-size: 2.2rem;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
     font-weight: 600;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: .7rem;
     margin-bottom: 1rem;
     color: var(--text-primary);
 }
 
-.admin-home p {
+.admin-home > p {
     font-size: 1.05rem;
     color: var(--text-secondary);
     margin-bottom: 2.5rem;
@@ -54,4 +54,98 @@
 .btn-primary:active {
     transform: translateY(0);
     box-shadow: none;
+}
+
+.admin-role-badge {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 6px 12px;
+    background: var(--primary-soft);
+    border: 1px solid var(--primary-border);
+    border-radius: 20px;
+    color: var(--primary-text);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.admin-access-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.admin-access-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 26px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+    min-width: 0;
+}
+
+.admin-access-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.admin-access-card:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.admin-access-card h2 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.admin-access-card p {
+    margin-bottom: 20px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+.admin-access-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    color: var(--primary-text);
+    background: var(--primary-soft);
+    font-size: 1.1rem;
+}
+
+.admin-access-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-text);
+}
+
+.admin-home .admin-access-notice {
+    margin: 24px 0 0;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+    .admin-access-grid { grid-template-columns: 1fr; }
+    .admin-access-card { padding: 20px; gap: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-access-card { transition: none; }
+    .admin-access-card:hover { transform: none; }
 }

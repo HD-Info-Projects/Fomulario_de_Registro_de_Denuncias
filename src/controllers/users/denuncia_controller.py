@@ -17,6 +17,7 @@ from src.models.Vitima_model import Vitima
 from src.models.Ofensor_model import Ofesor
 from src.models.Denuncia_model import Denuncia
 from src.models.Denuncia_anexos_model import DenunciaAnexos
+from src.models.Tipo_situacao_model import TipoSituacao
 
 from src.settings.extensions import db
 from src.settings.extensions import limiter
@@ -30,13 +31,6 @@ from src.utils.utils import (
 
 denuncia_bp = Blueprint("denuncias", __name__, url_prefix="/denuncias") 
 
-CATEGORIAS_PERMITIDAS = {
-    "Violência Física",
-    "Violência Psicológica",
-    "Assédio",
-    "Discriminação",
-    "Outro",
-}
 TESTEMUNHAS_PERMITIDAS = {"Sim", "Não"}
 
 def _required_text(data, field, label, errors, max_length=None):
@@ -108,11 +102,16 @@ def _prepare_uploads(files, errors):
 
     return prepared
 
+def _render_form(form_data=None, status=200):
+    tipos = TipoSituacao.query.filter_by(ativo=True).order_by(TipoSituacao.nome, TipoSituacao.id).all()
+    return render_template("formulario_denuncia.html", form_data=form_data or {}, tipos_situacao=tipos), status
+
+
 def _render_form_errors(errors, form_data):
     for error in errors:
         flash(error, "error")
 
-    return render_template("formulario_denuncia.html", form_data=form_data), 400
+    return _render_form(form_data, status=400)
 
 @denuncia_bp.route("/formulario", methods=["GET", "POST"])
 @limiter.limit("10 per hour", methods=["POST"])
@@ -129,15 +128,22 @@ def form_denuncia():
         nome_ofensor = _required_text(data, "nomeOfensor", "Nome do ofensor", errors, 150)
         setor_ofensor = _required_text(data, "setorOfensor", "Setor/Cargo do ofensor", errors, 100)
         descricao_ofensor = _required_text(data, "descricaoOfensor", "Descrição do ofensor", errors, 5000)
-        categoria = _required_text(data, "tipo_situacao", "Tipo da situação", errors, 255)
+        tipo_selecionado = _required_text(data, "tipo_situacao", "Tipo da situação", errors, 20)
         frequencia = _required_text(data, "frequencia", "Frequência", errors, 255)
         data_ocorrencia = _parse_data_ocorrencia(data.get("data_ocorrencia"), errors)
         descricao_fatos = _required_text(data, "descricaoFatos", "Descrição dos fatos", errors, 10000)
         testemunhas = _required_text(data, "testemunhas", "Informação sobre testemunhas", errors, 10)
         nomes_testemunhas = (data.get("nome_testemunhas") or "").strip()[:5000]
 
-        if categoria and categoria not in CATEGORIAS_PERMITIDAS:
-            errors.append("Tipo da situação inválido.")
+        try:
+            tipo_id = int(tipo_selecionado)
+        except (TypeError, ValueError):
+            tipo_id = None
+        tipo = None
+        if tipo_id is not None and 0 < tipo_id <= 2147483647:
+            tipo = TipoSituacao.query.filter_by(id=tipo_id, ativo=True).with_for_update().first()
+        if not tipo:
+            errors.append("Selecione um tipo de situação ativo. A lista pode ter sido atualizada.")
 
         if testemunhas and testemunhas not in TESTEMUNHAS_PERMITIDAS:
             errors.append("Valor de testemunhas inválido.")
@@ -171,7 +177,7 @@ def form_denuncia():
         )
 
         obj_denuncia = Denuncia(
-            categoria=categoria,
+            categoria=tipo.nome,
             frequencia=frequencia,
             data=data_ocorrencia,
             testemunha=testemunhas,
@@ -181,6 +187,7 @@ def form_denuncia():
             ofesor_id=None,
             data_public=date.today()
         )
+        obj_denuncia.tipo_situacao_id = tipo.id
 
         upload_folder = current_app.config["UPLOAD_FOLDER"]
         saved_files = []
@@ -221,11 +228,11 @@ def form_denuncia():
 
             current_app.logger.exception("Erro ao registrar denúncia.")
             flash("Não foi possível registrar a denúncia. Tente novamente.", "error")
-            return render_template("formulario_denuncia.html", form_data=data), 500
+            return _render_form(data, status=500)
 
         return redirect(url_for("denuncias.page_success"), code=303)
 
-    return render_template("formulario_denuncia.html", form_data={})
+    return _render_form()
 
 
 @denuncia_bp.route("/success", methods=["GET"])

@@ -287,7 +287,7 @@ def _record_change(denuncia, campo, old_value, new_value):
     if old_text == new_text:
         return
 
-    user_id = int(current_user.get_id()) if current_user and current_user.get_id() else None
+    user_id = current_user.id if current_user.is_authenticated else None
 
     db.session.add(DenunciaHistorico(
         denuncia_id=denuncia.id,
@@ -333,7 +333,7 @@ def login_admin():
             .first()
         )
 
-        if not user_obj:
+        if not user_obj or not user_obj.ativo:
             flash("Usuário ou senha inválidos", "error")
             return render_template("login_adm.html")
 

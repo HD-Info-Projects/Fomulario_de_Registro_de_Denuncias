@@ -1,0 +1,9 @@
+<div class="management-section-nav" role="navigation" aria-label="Seções de administração">
+    <a href="{{ url_for('administradores.listar') }}" class="management-section-link" {% if request.blueprint == 'administradores' %}aria-current="page"{% endif %}>
+        <i class="fa-solid fa-users-gear" aria-hidden="true"></i> Administradores
+    </a>
+    <a href="{{ url_for('tipos_situacao.listar') }}" class="management-section-link" {% if request.blueprint == 'tipos_situacao' %}aria-current="page"{% endif %}>
+        <i class="fa-solid fa-tags" aria-hidden="true"></i> Tipos de situação
+    </a>
+    <span class="management-access"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Acesso principal</span>
+</div>

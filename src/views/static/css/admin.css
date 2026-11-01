@@ -1,0 +1,562 @@
+.management {
+    display: grid;
+    gap: 24px;
+    min-width: 0;
+}
+
+.management-section-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+}
+
+.management-section-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.management-section-link:hover,
+.management-section-link[aria-current="page"] {
+    background: var(--primary-soft);
+    color: var(--primary-text);
+}
+
+.management-access {
+    margin-left: auto;
+    padding: 10px;
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
+.management-access i { margin-right: 5px; }
+
+.management-heading,
+.management-actions,
+.management-form-actions,
+.management-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.management-heading h1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.management-heading h1 i,
+.management-aside > i {
+    color: var(--primary);
+}
+
+.management-heading p,
+.management-note,
+.management-description,
+.management-pagination,
+.management-aside p {
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.management .management-eyebrow {
+    color: var(--primary-text);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.management-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.management-stats > div,
+.management-filters,
+.management-table-wrap,
+.management-editor,
+.management-aside {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.management-stats > div {
+    display: grid;
+    gap: 10px;
+    padding: 20px;
+}
+
+.management-stats span {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.management-stats strong {
+    font-size: 1.8rem;
+}
+
+.management-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 20px;
+}
+
+.management-field {
+    display: grid;
+    min-width: 0;
+    gap: 8px;
+}
+
+.management-field.grow {
+    flex: 1 1 250px;
+}
+
+.management-field label {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.management-field input,
+.management-field select,
+.management-field textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 12px;
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    font: inherit;
+}
+
+.management-field textarea {
+    resize: vertical;
+}
+
+.management-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.management-button.primary {
+    background: var(--button-primary-bg);
+    color: #fff;
+}
+
+.management-button.primary:hover {
+    background: var(--primary-hover);
+}
+
+.management-button.secondary {
+    border-color: var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+}
+
+.management-button.secondary:hover {
+    background: var(--surface-muted);
+    border-color: var(--primary);
+}
+
+.management-button.danger {
+    border-color: var(--danger-border);
+    color: var(--danger);
+    background: var(--danger-bg);
+}
+
+.management-button.danger:hover {
+    border-color: var(--danger);
+}
+
+.management-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.management-button.small {
+    padding: 8px 12px;
+}
+
+.management :is(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.management-table-wrap {
+    overflow-x: auto;
+    min-width: 0;
+}
+
+.management-table {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.management-table th,
+.management-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.management-table th {
+    background: var(--surface-muted);
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.management-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.management-table tbody tr:hover {
+    background: var(--primary-soft);
+}
+
+.management-identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.management-identity > div {
+    display: grid;
+    gap: 5px;
+    overflow-wrap: anywhere;
+}
+
+.management-identity :is(span:not(.management-avatar), small) {
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+.management-avatar {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--primary-soft);
+    color: var(--primary-text);
+    font-weight: 600;
+}
+
+.management-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: var(--surface-muted);
+    color: var(--muted);
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.management-badge.principal {
+    background: var(--primary-soft);
+    color: var(--primary-text);
+}
+
+.management-badge.active {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.management-badge.inactive {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.management-actions {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 8px;
+}
+
+.management-actions form {
+    margin: 0;
+}
+
+.management-description {
+    max-width: 400px;
+    margin-top: 6px;
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+.management-table .management-empty {
+    padding: 44px 20px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.management-pagination,
+.management-note {
+    font-size: 0.82rem;
+}
+
+.management-editor-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.management-editor {
+    display: grid;
+    gap: 24px;
+    padding: 28px;
+    min-width: 0;
+}
+
+.management-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.management-field.full {
+    grid-column: 1 / -1;
+}
+
+.management-password {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.management-password button {
+    padding: 8px 0;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--primary-text);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.8rem;
+}
+
+.management-form-actions {
+    justify-content: flex-start;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.management-aside {
+    padding: 24px;
+    display: grid;
+    gap: 16px;
+}
+
+.management-aside > i {
+    font-size: 1.5rem;
+}
+
+.management-aside h2 {
+    font-size: 1rem;
+}
+
+.management-aside p {
+    font-size: 0.85rem;
+}
+
+.management-errors {
+    border: 1px solid var(--danger-border);
+    background: var(--danger-bg);
+    color: var(--danger);
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.management-errors ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+    line-height: 1.6;
+}
+
+.management-field-error {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--danger);
+}
+
+.management-field-hint {
+    color: var(--muted);
+    font-size: 0.78rem;
+    justify-self: end;
+}
+
+.management [aria-invalid="true"] {
+    border-color: var(--danger);
+}
+
+.management form[aria-busy="true"] button[type="submit"]::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: management-spin 0.8s linear infinite;
+}
+
+@keyframes management-spin {
+    to { transform: rotate(360deg); }
+}
+
+.management-confirm-dialog {
+    width: min(440px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+
+.management-confirm-dialog:not([open]) { display: none; }
+
+.management-confirm-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(3px);
+}
+
+.management-confirm-content {
+    display: grid;
+    gap: 16px;
+    padding: 28px;
+}
+
+.management-confirm-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    color: var(--primary-text);
+    background: var(--primary-soft);
+    font-size: 1.3rem;
+}
+
+.management-confirm-content h2 { font-size: 1.25rem; }
+.management-confirm-content p { color: var(--muted); line-height: 1.6; }
+.management-confirm-content .management-confirm-target { color: var(--text); font-weight: 600; overflow-wrap: anywhere; }
+.management-confirm-target[hidden] { display: none; }
+
+.management-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.management-confirm-dialog button:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.management-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    .management-editor-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .management-section-link { flex: 1 1 190px; }
+    .management-access { margin-left: 0; }
+
+    .management-stats,
+    .management-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .management-stats > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+    }
+
+    .management-filters > .management-field {
+        flex: 1 1 100%;
+    }
+
+    .management-editor,
+    .management-filters,
+    .management-aside {
+        padding: 18px;
+    }
+
+    .management-field :is(input, select, textarea) {
+        font-size: 16px;
+    }
+
+    .management-pagination .management-actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .management-button {
+        transition: none;
+    }
+    .management form[aria-busy="true"] button[type="submit"]::before { animation: none; }
+}

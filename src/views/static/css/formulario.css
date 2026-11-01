@@ -181,6 +181,14 @@ body {
     transform: translateY(-1px);
 }
 
+.login-box button:disabled,
+.login-box button:disabled:hover {
+    background: var(--button-primary-bg);
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
 /* ===== Subtítulos (h2) ===== */
 .login-box h2 {
     color: var(--text);

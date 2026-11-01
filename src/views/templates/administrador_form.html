@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Editar administrador' if usuario else 'Novo administrador' }}{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block content %}
+<section class="management">
+    {% include 'partials/management_navigation.html' %}
+    <div class="management-heading"><div><p class="management-eyebrow">Controle de acesso</p><h1>{{ 'Editar administrador' if usuario else 'Novo administrador' }}</h1><p>Defina quem pode acessar e gerenciar o sistema.</p></div><a class="management-button secondary" href="{{ url_for('administradores.listar') }}">Voltar para administradores</a></div>
+    <div class="management-editor-layout">
+        <form class="management-editor" method="POST" data-management-form data-loading-label="Salvando administrador…">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if errors %}<div class="management-errors" role="alert"><strong>Confira os dados abaixo:</strong><ul>{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}
+            <div class="management-form-grid">
+                <div class="management-field"><label for="nome">Nome completo</label><input id="nome" name="nome" value="{{ form_data.nome }}" maxlength="150" autocomplete="name" required></div>
+                <div class="management-field"><label for="email">E-mail de acesso</label><input id="email" name="email" type="email" value="{{ form_data.email }}" maxlength="255" autocomplete="username" required></div>
+                <div class="management-field full"><label for="perfil">Perfil de acesso</label><select id="perfil" name="perfil" required>
+                    <option value="administrador" {% if form_data.perfil == 'administrador' %}selected{% endif %} {% if usuario and usuario.id == current_user.id %}disabled{% endif %}>Administrador — análise das denúncias</option>
+                    <option value="principal" {% if form_data.perfil == 'principal' %}selected{% endif %}>Administrador principal — contas e configurações</option>
+                </select></div>
+                <div class="management-field"><label for="senha">{{ 'Nova senha (opcional)' if usuario else 'Senha' }}</label><div class="management-password"><input id="senha" name="senha" type="password" minlength="8" maxlength="128" autocomplete="new-password" {% if not usuario %}required{% endif %}><button type="button" data-toggle-password="senha" aria-controls="senha" aria-pressed="false">Mostrar</button></div></div>
+                <div class="management-field"><label for="confirmacao_senha">Confirme a senha</label><div class="management-password"><input id="confirmacao_senha" name="confirmacao_senha" type="password" minlength="8" maxlength="128" autocomplete="new-password" aria-describedby="senha-feedback" {% if not usuario %}required{% endif %}><button type="button" data-toggle-password="confirmacao_senha" aria-controls="confirmacao_senha" aria-pressed="false">Mostrar</button></div><p id="senha-feedback" class="management-field-error" data-password-feedback aria-live="polite" hidden></p></div>
+            </div>
+            <p class="management-note">Use entre 8 e 128 caracteres.{% if usuario %} Deixe os dois campos de senha vazios para manter a senha atual.{% endif %}</p>
+            <div class="management-form-actions"><button class="management-button primary" type="submit">{{ 'Salvar alterações' if usuario else 'Cadastrar administrador' }}</button><a class="management-button secondary" href="{{ url_for('administradores.listar') }}">Cancelar</a></div>
+            <p class="management-sr-only" data-submit-feedback role="status"></p>
+        </form>
+        <aside class="management-aside"><i class="fa-solid fa-user-shield" aria-hidden="true"></i><h2>Acesso com responsabilidade</h2><p>Somente administradores principais podem gerenciar contas e tipos de situação.</p><p>A senha atual nunca é exibida. Ao redefinir a senha de outra conta, suas sessões anteriores serão revogadas.</p><p>Você não pode remover o próprio perfil principal ou desativar a própria conta.</p></aside>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>{% endblock %}

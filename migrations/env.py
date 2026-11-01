@@ -18,6 +18,7 @@ from src.models import Ofensor_model  # noqa: F401
 from src.models import Denuncia_model  # noqa: F401
 from src.models import Denuncia_anexos_model  # noqa: F401
 from src.models import Denuncia_historico_model  # noqa: F401
+from src.models import Tipo_situacao_model  # noqa: F401
 
 # Config do Alembic (alembic.ini)
 config = context.config

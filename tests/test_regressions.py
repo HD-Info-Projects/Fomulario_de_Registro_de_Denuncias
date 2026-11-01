@@ -49,7 +49,7 @@ class FormFields(HTMLParser):
             self.select = None
 
 
-class ApplicationRegressionTests(unittest.TestCase):
+class ApplicationTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.root = tempfile.TemporaryDirectory(prefix="denuncias-tests-")
@@ -82,6 +82,7 @@ class ApplicationRegressionTests(unittest.TestCase):
         from src.models.Ofensor_model import Ofesor
         from src.models.Usuario_model import Usuario
         from src.models.Vitima_model import Vitima
+        from src.models.Tipo_situacao_model import TipoSituacao
 
         cls.Denuncia = Denuncia
         cls.Anexo = DenunciaAnexos
@@ -89,6 +90,7 @@ class ApplicationRegressionTests(unittest.TestCase):
         cls.Ofesor = Ofesor
         cls.Usuario = Usuario
         cls.Vitima = Vitima
+        cls.TipoSituacao = TipoSituacao
         cls.password = "test-password-only"
         cls.password_hash = generate_password_hash(cls.password)
         image = io.BytesIO()
@@ -119,18 +121,22 @@ class ApplicationRegressionTests(unittest.TestCase):
         with self.app.app_context():
             self.db.create_all()
             user = self.Usuario("Administrador fictício", "admin@example.com", self.password_hash)
-            self.db.session.add(user)
+            tipo = self.TipoSituacao("Outro")
+            self.db.session.add_all([user, tipo])
             self.db.session.commit()
             self.user_id = user.id
+            self.tipo_id = tipo.id
 
     def tearDown(self):
         with self.app.app_context():
             self.db.session.remove()
             self.db.drop_all()
 
-    def login(self):
+    def login(self, user_id=None):
+        with self.app.app_context():
+            identity = self.db.session.get(self.Usuario, user_id or self.user_id).get_id()
         with self.client.session_transaction() as session:
-            session["_user_id"] = str(self.user_id)
+            session["_user_id"] = identity
             session["_fresh"] = True
 
     def create_denuncia(self, *, cadastro=date(2026, 10, 30), ocorrencia=date(2025, 1, 15), **changes):
@@ -180,7 +186,7 @@ class ApplicationRegressionTests(unittest.TestCase):
             "nome": "Vítima fictícia do formulário", "idade": "30", "telefone": "11999999999",
             "email": "vitima@example.com", "setor": "Setor fictício", "nomeOfensor": "Ofensor fictício",
             "setorOfensor": "Outro setor", "descricaoOfensor": "Descrição fictícia do ofensor",
-            "tipo_situacao": "Outro", "frequencia": "Uma vez", "data_ocorrencia": "2025-01-15",
+            "tipo_situacao": str(self.tipo_id), "frequencia": "Uma vez", "data_ocorrencia": "2025-01-15",
             "descricaoFatos": "Relato fictício para o teste", "testemunhas": "Sim",
             "nome_testemunhas": "Testemunha fictícia",
         }
@@ -196,6 +202,7 @@ class ApplicationRegressionTests(unittest.TestCase):
                 self.assertEqual(model.query.count(), 0)
         self.assertEqual(list(self.upload_folder.iterdir()), [])
 
+class ApplicationRegressionTests(ApplicationTestCase):
     def test_admin_routes_require_login(self):
         for route in (
             "/admin/", "/admin/painel", "/admin/dashboard", "/admin/anexos/1",

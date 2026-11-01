@@ -87,15 +87,16 @@
 
                     <div class="input-group">
                         <i class="fa-solid fa-list"></i>
-                        <select name="tipo_situacao" required>
+                        <select name="tipo_situacao" required {% if not tipos_situacao %}disabled{% endif %}>
                             <option value="">Tipo da situação...</option>
-                            <option value="Violência Física" {% if form_data.get('tipo_situacao') == 'Violência Física' %}selected{% endif %}>Violência Física</option>
-                            <option value="Violência Psicológica" {% if form_data.get('tipo_situacao') == 'Violência Psicológica' %}selected{% endif %}>Violência Psicológica</option>
-                            <option value="Assédio" {% if form_data.get('tipo_situacao') == 'Assédio' %}selected{% endif %}>Assédio</option>
-                            <option value="Discriminação" {% if form_data.get('tipo_situacao') == 'Discriminação' %}selected{% endif %}>Discriminação</option>
-                            <option value="Outro" {% if form_data.get('tipo_situacao') == 'Outro' %}selected{% endif %}>Outro</option>
+                            {% for tipo in tipos_situacao %}
+                                <option value="{{ tipo.id }}" {% if form_data.get('tipo_situacao') == tipo.id|string %}selected{% endif %}>{{ tipo.nome }}</option>
+                            {% endfor %}
                         </select>
                     </div>
+                    {% if not tipos_situacao %}
+                        <p role="status">Nenhum tipo de situação está disponível no momento. Tente novamente mais tarde.</p>
+                    {% endif %}
 
                     <div class="input-group">
                         <i class="fa-solid fa-location-dot"></i>
@@ -158,7 +159,7 @@
 
                 <!-- ===== Botão ===== -->
                 <div class="section" style="margin-top: 35px;">
-                    <button type="submit">
+                    <button type="submit" {% if not tipos_situacao %}disabled{% endif %}>
                         <i  class="fa-solid fa-paper-plane"></i>
                         Enviar Denúncia
                     </button>
